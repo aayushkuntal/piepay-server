@@ -1,4 +1,3 @@
-// controllers/offerController.js
 const offerService = require('../services/offerService');
 const { validationResult } = require('express-validator');
 

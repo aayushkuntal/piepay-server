@@ -1,4 +1,3 @@
-// models/Offer.js
 const mongoose = require("mongoose");
 const {
     BANK_NAMES,
@@ -74,7 +73,6 @@ const offerSchema = new mongoose.Schema(
     },
 );
 
-// Compound indexes for efficient querying
 offerSchema.index({ bankName: 1, paymentInstruments: 1, isActive: 1 });
 offerSchema.index({ minimumAmount: 1, maxTxnValue: 1, maximumDiscount: -1 });
 
