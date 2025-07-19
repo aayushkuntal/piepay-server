@@ -1,6 +1,7 @@
 # PiePay Backend Assignment
 
 This repository implements a backend service for the PiePay take-home assignment. It processes Flipkart offer API responses, stores extracted offers in MongoDB, and calculates the highest applicable discount based on user parameters. The service supports the required endpoints and the bonus payment instrument feature.
+<img width="2400" height="1600" alt="image" src="https://github.com/user-attachments/assets/fd0ac65f-12d1-4e2d-9904-256e58400069" />
 
 Key features:
 - **POST /offer**: Extracts and stores offers from Flipkart API responses.
