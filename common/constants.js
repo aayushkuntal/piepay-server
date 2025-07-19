@@ -9,7 +9,7 @@ const BANK_NAMES = [
   "INDUSIND",
   "BOB",
   "PNB",
-  "PAYTM"
+  "PAYTM",
   "OTHER",
 ];
 
