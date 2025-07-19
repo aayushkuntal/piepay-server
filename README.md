@@ -17,9 +17,10 @@ The implementation uses Node.js, Express, MongoDB, and node-cache for efficiency
 
 ### Installation
 1. Clone the repository:
-git clone https://github.com/yourusername/piepay-backend.git
-cd piepay-backend
-
+```
+  git clone https://github.com/yourusername/piepay-backend.git
+  cd piepay-backend
+```
 text
 
 2. Install dependencies:
@@ -50,11 +51,11 @@ The server starts at `http://localhost:3000`. No migrations are needed—Mongoos
 5. Test endpoints:
 - Insert offers:
   ```
-  curl -X POST http://localhost:3000/offer -H "Content-Type: application/json" -d '{"flipkartOfferApiResponse": { ... Flipkart JSON ... }}'
+  curl -X POST http://localhost:3000/api/vi/offer -H "Content-Type: application/json" -d '{"flipkartOfferApiResponse": { ... Flipkart JSON ... }}'
   ```
 - Get highest discount:
   ```
-  curl -G http://localhost:3000/highest-discount --data-urlencode "amountToPay=10000" --data-urlencode "bankName=AXIS" --data-urlencode "paymentInstrument=CREDIT"
+  curl -G http://localhost:3000/api/v1/highest-discount --data-urlencode "amountToPay=10000" --data-urlencode "bankName=AXIS" --data-urlencode "paymentInstrument=CREDIT"
   ```
 
 ## Assumptions Made
