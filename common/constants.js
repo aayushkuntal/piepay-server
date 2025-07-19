@@ -1,0 +1,31 @@
+const BANK_NAMES = [
+  "AXIS",
+  "ICICI",
+  "HDFC",
+  "SBI",
+  "IDFC",
+  "KOTAK",
+  "YES",
+  "INDUSIND",
+  "BOB",
+  "PNB",
+  "PAYTM"
+  "OTHER",
+];
+
+const DISCOUNT_TYPES = ["PERCENTAGE", "FIXED_AMOUNT", "CASHBACK"];
+const CASHBACK_SUB_TYPES = ["PERCENTAGE", "FLAT"];
+const PAYMENT_INSTRUMENTS = [
+  "CREDIT",
+  "DEBIT",
+  "EMI_OPTIONS",
+  "UPI",
+  "NET_BANKING",
+];
+
+module.exports = {
+  BANK_NAMES,
+  DISCOUNT_TYPES,
+  CASHBACK_SUB_TYPES,
+  PAYMENT_INSTRUMENTS,
+};
