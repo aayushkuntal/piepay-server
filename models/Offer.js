@@ -74,6 +74,6 @@ const offerSchema = new mongoose.Schema(
 );
 
 offerSchema.index({ bankName: 1, paymentInstruments: 1, isActive: 1 });
-offerSchema.index({ minimumAmount: 1, maxTxnValue: 1, maximumDiscount: -1 });
+offerSchema.index({ minimumAmount: 1, maxTxnValue: 1 });
 
 module.exports = mongoose.model("Offer", offerSchema);
