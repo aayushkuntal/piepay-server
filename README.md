@@ -69,7 +69,7 @@ The server starts at `http://localhost:3000`. No migrations are needed—Mongoos
 
 ## Design Choices
 - **Framework**: Node.js with Express for its simplicity, speed, and robust middleware support—ideal for API services handling high throughput.
-- **Database**: MongoDB via Mongoose for flexible, schema-less storage of variable offer data. The schema includes `adjustmentId` (unique index), enums for `bankName`/`discountType` (consistency), and arrays for `paymentInstruments`. Compound indexes on `bankName`, `paymentInstruments`, `minimumAmount`, and `maxTxnValue` ensure fast queries.
+- **Database**: MongoDB via Mongoose for flexible, schema-less storage of variable offer data. The schema defines `adjustmentId` with a unique index, uses enums for fields like `bankName` and `discountType` to ensure consistency, and stores `paymentInstruments` as an array. A compound index on `isActive`, `bankName`, `paymentInstruments`, `minimumAmount`, and `maxTxnValue` is used to optimize query performance based on common filtering patterns.
 - **Modularity**: Code is separated into controllers (API handlers), services (business logic), models (schemas), routes, and utils (cache). CommonJS exports for broad compatibility.
 - **Caching**: node-cache for in-memory storage of discount results (keyed by params, 10-min TTL) to optimize repeated queries; extensible to Redis.
 - **Validation & Errors**: express-validator for input checks; centralized error handler for clean responses.
@@ -84,9 +84,9 @@ To handle 1,000 RPS:
 - **Monitoring**: Integrate Prometheus/Grafana for metrics; auto-scale based on CPU/load. This setup should achieve <50ms latency at scale.
 
 ## Improvements with More Time
-- **Testing**: Add unit/integration tests with Jest for parsing, calculations, and edge cases.
+- **Testing**: Add unit/integration tests with Chai/Mocha/Sinon for parsing, calculations, and edge cases.
 - **Advanced Parsing**: Use NLP (e.g., natural.js) for robust extraction from unstructured text.
 - **API Docs**: Integrate Swagger for interactive endpoint documentation.
-- **Security**: Add JWT auth, HTTPS, and SQL injection protections.
+- **Security**: Add authentication, enforce HTTPS, and implement input validation to protect against NoSQL injection and other common attacks.
 - **Enhancements**: Support pagination for offers, return full offer details in discount responses, and add logging (Winston) with error tracking (Sentry).
 - **CI/CD**: Set up GitHub Actions for automated testing and deployment.

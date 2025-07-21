@@ -73,7 +73,12 @@ const offerSchema = new mongoose.Schema(
     },
 );
 
-offerSchema.index({ bankName: 1, paymentInstruments: 1, isActive: 1 });
-offerSchema.index({ minimumAmount: 1, maxTxnValue: 1 });
+offerSchema.index({
+    isActive: 1,
+    bankName: 1,
+    paymentInstruments: 1,
+    minimumAmount: 1,
+    maxTxnValue: 1,
+});
 
 module.exports = mongoose.model("Offer", offerSchema);
