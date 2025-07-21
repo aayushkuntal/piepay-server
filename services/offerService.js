@@ -34,7 +34,10 @@ class OfferService {
 
         let bankName = "OTHER";
         for (const bank of BANK_NAMES) {
-            if (title.toUpperCase().includes(bank) || summary.toUpperCase().includes(bank)) {
+            if (
+                title.toUpperCase().includes(bank) ||
+                summary.toUpperCase().includes(bank)
+            ) {
                 bankName = bank;
                 break;
             }
@@ -80,10 +83,10 @@ class OfferService {
         const instruments = [];
 
         if (text.includes("CREDIT CARD")) instruments.push("CREDIT");
-        else if (text.includes("DEBIT CARD")) instruments.push("DEBIT");
-        else if (text.includes("EMI")) instruments.push("EMI_OPTIONS");
-        else if (text.includes("UPI")) instruments.push("UPI");
-        else if (text.includes("NET BANKING") || text.includes("NETBANKING"))
+        if (text.includes("DEBIT CARD")) instruments.push("DEBIT");
+        if (text.includes("EMI")) instruments.push("EMI_OPTIONS");
+        if (text.includes("UPI")) instruments.push("UPI");
+        if (text.includes("NET BANKING") || text.includes("NETBANKING"))
             instruments.push("NET_BANKING");
 
         return instruments.length > 0 ? instruments : [];
@@ -95,45 +98,38 @@ class OfferService {
         let discountValue = 0;
         let cashbackSubType = "FLAT";
 
-        const percentMatch = text.match(/(\d+)%/);
+        const percentMatch = text.match(/(\d+(?:\.\d+)?)\s*%/);
         if (percentMatch) {
-            discountValue = parseInt(percentMatch[1]);
+            discountValue = parseFloat(percentMatch[1]);
             cashbackSubType = "PERCENTAGE";
-            if (upperText.includes("CASHBACK")) {
-                discountType = "CASHBACK";
-            } else {
-                discountType = "PERCENTAGE";
-            }
+            discountType = upperText.includes("CASHBACK")
+                ? "CASHBACK"
+                : "PERCENTAGE";
             return { discountType, discountValue, cashbackSubType };
         }
 
         const flatMatch =
-            text.match(/FLAT ₹?(\d+)/i) ||
-            text.match(/UP TO ₹?(\d+)/i) ||
-            text.match(/₹?(\d+) CASHBACK/i);
+            text.match(/FLAT\s*₹?\s*(\d+)/i) ||
+            text.match(/UP TO\s*₹?\s*(\d+)/i) ||
+            text.match(/₹?\s*(\d+)\s*CASHBACK/i);
         if (flatMatch) {
             discountValue = parseInt(flatMatch[1]);
             cashbackSubType = "FLAT";
-            if (upperText.includes("CASHBACK")) {
-                discountType = "CASHBACK";
-            } else {
-                discountType = "FIXED_AMOUNT";
-            }
+            discountType = upperText.includes("CASHBACK")
+                ? "CASHBACK"
+                : "FIXED_AMOUNT";
             return { discountType, discountValue, cashbackSubType };
         }
 
         return { discountType, discountValue, cashbackSubType };
     }
-    
+
     async storeOffers(offers) {
         if (!offers || offers.length === 0) {
             return { identified: 0, created: 0, modified: 0, errors: [] };
         }
 
-        const session = await Offer.startSession();
-        let result = null;
-
-        const operations = offers.map(offerData => ({
+        const operations = offers.map((offerData) => ({
             updateOne: {
                 filter: { adjustmentId: offerData.adjustmentId },
                 update: { $set: offerData },
@@ -142,12 +138,14 @@ class OfferService {
         }));
 
         try {
-            await session.withTransaction(async () => {
-                result = await Offer.bulkWrite(operations, { session, ordered: false });
-
-                const cacheKeys = offers.map(offer => `offer:${offer.adjustmentId}`);
-                await cache.del(cacheKeys);
+            const result = await Offer.bulkWrite(operations, {
+                ordered: false,
             });
+
+            const cacheKeys = offers.map(
+                (offer) => `offer:${offer.adjustmentId}`,
+            );
+            cache.del(cacheKeys);
 
             return {
                 identified: offers.length,
@@ -156,15 +154,13 @@ class OfferService {
                 errors: [],
             };
         } catch (error) {
-            console.error("Error during bulk write transaction of offers:", error.message);
+            console.error("Error during bulk write of offers:", error.message);
             return {
                 identified: offers.length,
                 created: 0,
                 modified: 0,
                 errors: [{ message: error.message, stack: error.stack }],
             };
-        } finally {
-            session.endSession();
         }
     }
 }

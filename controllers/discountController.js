@@ -20,7 +20,7 @@ class DiscountController {
                 paymentInstrument,
             );
 
-            res.json(result);
+            res.status(200).json(result);
         } catch (error) {
             console.error("Error calculating discount:", error);
             next(error);

@@ -8,7 +8,6 @@ class DiscountService {
         paymentInstrument = null,
     ) {
         const cacheKey = `discount_${amountToPay}_${bankName.toUpperCase()}_${paymentInstrument || "any"}`;
-
         const cachedResult = cache.get(cacheKey);
         if (cachedResult) {
             return cachedResult;
@@ -20,16 +19,14 @@ class DiscountService {
             paymentInstrument?.toUpperCase(),
         );
 
-        const applicableOffers = await Offer.find(query)
-            .sort({ maximumDiscount: -1 })
-            .lean();
-        console.log(applicableOffers);
+        const applicableOffers = await Offer.find(query).lean();
+
         if (applicableOffers.length === 0) {
             const result = { highestDiscountAmount: 0 };
             cache.set(cacheKey, result, 300);
             return result;
         }
-    
+
         let highestDiscount = 0;
 
         for (const offer of applicableOffers) {
@@ -45,25 +42,23 @@ class DiscountService {
         return result;
     }
 
-
     buildDiscountQuery(amountToPay, bankName, paymentInstrument) {
-      const query = {
-        isActive: true,
-        bankName,
-        minimumAmount: { $lt: amountToPay },
-        maxTxnValue: { $gte: amountToPay },
-      };
+        const query = {
+            isActive: true,
+            bankName,
+            minimumAmount: { $lt: amountToPay },
+            maxTxnValue: { $gte: amountToPay },
+        };
 
-      if (paymentInstrument) {
-        query.paymentInstruments = paymentInstrument;
-      }
+        if (paymentInstrument) {
+            query.paymentInstruments = paymentInstrument;
+        }
 
-      return query;
+        return query;
     }
 
     calculateDiscountForOffer(offer, amountToPay) {
         if (amountToPay < offer.minimumAmount) return 0;
-        console.log(offer);
         let calculatedDiscount = 0;
 
         if (offer.discountType === "PERCENTAGE") {

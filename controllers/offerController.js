@@ -23,7 +23,7 @@ class OfferController {
             const offers = offerService.extractOffers(flipkartOfferApiResponse);
             const result = await offerService.storeOffers(offers);
 
-            res.json({
+            res.status(200).json({
                 noOfOffersIdentified: result.identified,
                 noOfNewOffersCreated: result.created
             });
